@@ -1,0 +1,62 @@
+{
+  "TYPES": {
+    "Actor": { "character": "Personnage", "npc": "PNJ" },
+    "Item": { "gear": "Équipement", "feature": "Capacité" }
+  },
+  "__IDU__": {
+    "Ability": { "str": "Force", "agi": "Agilité", "mind": "Esprit" },
+    "Actor": {
+      "base": {
+        "FIELDS": {
+          "health": { "label": "Santé", "value": { "label": "Santé actuelle" }, "max": { "label": "Santé maximale" } },
+          "abilities": {
+            "str": { "value": { "label": "Force" } },
+            "agi": { "value": { "label": "Agilité" } },
+            "mind": { "value": { "label": "Esprit" } }
+          },
+          "biography": { "label": "Biographie" }
+        }
+      },
+      "character": {
+        "Level": "Niveau",
+        "FIELDS": { "xp": { "label": "Expérience", "hint": "Un niveau tous les 10 XP." } }
+      },
+      "npc": {
+        "FIELDS": { "threat": { "label": "Menace" } }
+      }
+    },
+    "Item": {
+      "New": "Nouvel objet ({type})",
+      "Create": "Créer un objet",
+      "Edit": "Modifier",
+      "Delete": "Supprimer",
+      "None": "Rien pour l'instant.",
+      "gear": {
+        "TotalWeight": "Poids total",
+        "FIELDS": {
+          "description": { "label": "Description" },
+          "quantity": { "label": "Quantité" },
+          "weight": { "label": "Poids" },
+          "formula": { "label": "Formule de jet", "hint": "Lancée à l'utilisation, ex. 1d6 + @actor.str" }
+        }
+      },
+      "feature": {
+        "FIELDS": {
+          "description": { "label": "Description" },
+          "source": { "label": "Source" }
+        }
+      }
+    },
+    "Roll": {
+      "Ability": "Test de {ability}",
+      "Tooltip": "Lancer 1d20 + caractéristique"
+    },
+    "Sheet": {
+      "Actor": "Fiche d'acteur __TITLE__",
+      "Item": "Fiche d'objet __TITLE__",
+      "Name": "Nom",
+      "EditImage": "Changer l'image",
+      "Tabs": { "attributes": "Caractéristiques", "items": "Objets", "biography": "Biographie" }
+    }
+  }
+}

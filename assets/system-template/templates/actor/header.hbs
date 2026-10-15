@@ -1,0 +1,26 @@
+<header class="sheet-header">
+  <img class="profile" src="{{actor.img}}" alt="{{actor.name}}" data-action="editImage" data-edit="img"
+       data-tooltip="{{localize "__IDU__.Sheet.EditImage"}}">
+  <div class="header-fields">
+    <input class="actor-name" type="text" name="name" value="{{source.name}}"
+           placeholder="{{localize "__IDU__.Sheet.Name"}}" {{disabled (not editable)}}>
+    <div class="resources">
+      <div class="resource health">
+        <label>{{localize "__IDU__.Actor.base.FIELDS.health.label"}}</label>
+        {{formInput systemFields.health.fields.value value=systemSource.health.value disabled=(not editable)}}
+        <span class="sep">/</span>
+        {{formInput systemFields.health.fields.max value=systemSource.health.max disabled=(not editable)}}
+      </div>
+      {{#if isCharacter}}
+      <div class="resource">
+        {{formGroup systemFields.xp value=systemSource.xp localize=true disabled=(not editable)}}
+        <span class="level">{{localize "__IDU__.Actor.character.Level"}} {{system.level}}</span>
+      </div>
+      {{else}}
+      <div class="resource">
+        {{formGroup systemFields.threat value=systemSource.threat localize=true disabled=(not editable)}}
+      </div>
+      {{/if}}
+    </div>
+  </div>
+</header>

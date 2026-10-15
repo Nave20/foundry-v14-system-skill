@@ -1,0 +1,18 @@
+<div class="item-sheet-body">
+  <header class="sheet-header">
+    <img class="profile" src="{{item.img}}" alt="{{item.name}}" data-action="editImage" data-edit="img">
+    <input class="item-name" type="text" name="name" value="{{source.name}}" {{disabled (not editable)}}>
+  </header>
+  <div class="details">
+    {{#if (eq item.type "gear")}}
+      {{formGroup systemFields.quantity value=systemSource.quantity localize=true disabled=(not editable)}}
+      {{formGroup systemFields.weight value=systemSource.weight localize=true disabled=(not editable)}}
+      {{formGroup systemFields.formula value=systemSource.formula localize=true disabled=(not editable)}}
+      <p class="hint">{{localize "__IDU__.Item.gear.TotalWeight"}}: {{system.totalWeight}}</p>
+    {{else}}
+      {{formGroup systemFields.source value=systemSource.source localize=true disabled=(not editable)}}
+    {{/if}}
+    {{formInput systemFields.description enriched=enrichedDescription value=systemSource.description
+                toggled=true disabled=(not editable)}}
+  </div>
+</div>

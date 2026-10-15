@@ -1,0 +1,39 @@
+{
+  "id": "__ID__",
+  "type": "system",
+  "title": "__TITLE__",
+  "description": "<p>__TITLE__ — game system for Foundry Virtual Tabletop V14.</p>",
+  "version": "0.1.0",
+  "compatibility": {
+    "minimum": "14",
+    "verified": "14.369"
+  },
+  "authors": [{ "name": "__AUTHOR__" }],
+  "esmodules": ["__ID__.mjs"],
+  "styles": ["styles/__ID__.css"],
+  "languages": [
+    { "lang": "en", "name": "English", "path": "lang/en.json" },
+    { "lang": "fr", "name": "Français", "path": "lang/fr.json" }
+  ],
+  "documentTypes": {
+    "Actor": {
+      "character": { "htmlFields": ["biography"] },
+      "npc": { "htmlFields": ["biography"] }
+    },
+    "Item": {
+      "gear": { "htmlFields": ["description"] },
+      "feature": { "htmlFields": ["description"] }
+    }
+  },
+  "initiative": "1d20 + @abilities.agi.value",
+  "grid": { "distance": 1, "units": "m" },
+  "primaryTokenAttribute": "health",
+  "secondaryTokenAttribute": null,
+  "socket": false,
+  "flags": {
+    "hotReload": {
+      "extensions": ["css", "hbs", "json"],
+      "paths": ["styles", "templates", "lang"]
+    }
+  }
+}

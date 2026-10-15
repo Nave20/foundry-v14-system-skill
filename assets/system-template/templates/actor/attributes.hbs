@@ -1,0 +1,13 @@
+<section class="tab attributes {{tab.cssClass}}" data-group="primary" data-tab="attributes">
+  <ol class="abilities">
+    {{#each abilities as |ability|}}
+    <li class="ability" data-ability="{{ability.key}}">
+      <button type="button" class="ability-roll" data-action="rollAbility" data-ability="{{ability.key}}"
+              data-tooltip="{{localize "__IDU__.Roll.Tooltip"}}">
+        <i class="fa-solid fa-dice-d20" inert></i> {{localize ability.label}}
+      </button>
+      {{formInput ability.field value=ability.value disabled=(not @root.editable)}}
+    </li>
+    {{/each}}
+  </ol>
+</section>

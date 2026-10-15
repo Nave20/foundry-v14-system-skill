@@ -1,0 +1,51 @@
+/* __TITLE__ — scoped under the system root class; uses core CSS variables so light/dark themes work. */
+
+.__ID__.sheet .window-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  overflow: hidden;
+}
+
+.__ID__.sheet .tab {
+  overflow-y: auto;
+  flex: 1;
+}
+
+.__ID__ .sheet-header {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.__ID__ .sheet-header .profile {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.__ID__ .header-fields { flex: 1; display: flex; flex-direction: column; gap: 0.5rem; }
+.__ID__ .actor-name, .__ID__ .item-name { font-size: var(--font-size-24, 1.5rem); }
+.__ID__ .resources { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
+.__ID__ .resource { display: flex; align-items: center; gap: 0.25rem; }
+.__ID__ .resource input[type="number"] { width: 4rem; text-align: center; }
+
+.__ID__ .abilities { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+.__ID__ .ability { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; }
+.__ID__ .ability input { width: 4rem; text-align: center; }
+
+.__ID__ .item-group-header { display: flex; justify-content: space-between; align-items: center; }
+.__ID__ .item-group-header button { flex: 0 0 auto; width: auto; }
+.__ID__ .item-list { list-style: none; margin: 0 0 1rem; padding: 0; }
+.__ID__ .item-list .item { display: flex; align-items: center; gap: 0.5rem; padding: 0.25rem 0; border-bottom: 1px solid var(--color-border); }
+.__ID__ .item-img { width: 28px; height: 28px; border: none; }
+.__ID__ .item-name { flex: 1; cursor: pointer; }
+.__ID__ .item-controls { display: flex; gap: 0.5rem; }
+.__ID__ .item-list .empty { color: var(--color-text-subtle); font-style: italic; }
+
+.__ID__.item .item-sheet-body { display: flex; flex-direction: column; gap: 0.5rem; height: 100%; }
+.__ID__.item .details { flex: 1; overflow-y: auto; }
+.__ID__ prose-mirror { min-height: 200px; }

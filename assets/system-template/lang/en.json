@@ -1,0 +1,62 @@
+{
+  "TYPES": {
+    "Actor": { "character": "Character", "npc": "NPC" },
+    "Item": { "gear": "Gear", "feature": "Feature" }
+  },
+  "__IDU__": {
+    "Ability": { "str": "Strength", "agi": "Agility", "mind": "Mind" },
+    "Actor": {
+      "base": {
+        "FIELDS": {
+          "health": { "label": "Health", "value": { "label": "Current health" }, "max": { "label": "Maximum health" } },
+          "abilities": {
+            "str": { "value": { "label": "Strength" } },
+            "agi": { "value": { "label": "Agility" } },
+            "mind": { "value": { "label": "Mind" } }
+          },
+          "biography": { "label": "Biography" }
+        }
+      },
+      "character": {
+        "Level": "Level",
+        "FIELDS": { "xp": { "label": "Experience", "hint": "One level every 10 XP." } }
+      },
+      "npc": {
+        "FIELDS": { "threat": { "label": "Threat" } }
+      }
+    },
+    "Item": {
+      "New": "New {type}",
+      "Create": "Create item",
+      "Edit": "Edit",
+      "Delete": "Delete",
+      "None": "Nothing here yet.",
+      "gear": {
+        "TotalWeight": "Total weight",
+        "FIELDS": {
+          "description": { "label": "Description" },
+          "quantity": { "label": "Quantity" },
+          "weight": { "label": "Weight" },
+          "formula": { "label": "Roll formula", "hint": "Rolled when the item is used, e.g. 1d6 + @actor.str" }
+        }
+      },
+      "feature": {
+        "FIELDS": {
+          "description": { "label": "Description" },
+          "source": { "label": "Source" }
+        }
+      }
+    },
+    "Roll": {
+      "Ability": "{ability} check",
+      "Tooltip": "Roll 1d20 + ability"
+    },
+    "Sheet": {
+      "Actor": "__TITLE__ Actor Sheet",
+      "Item": "__TITLE__ Item Sheet",
+      "Name": "Name",
+      "EditImage": "Change image",
+      "Tabs": { "attributes": "Attributes", "items": "Items", "biography": "Biography" }
+    }
+  }
+}
