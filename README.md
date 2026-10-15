@@ -8,7 +8,7 @@ A [Claude](https://claude.com/claude-code) **skill** that teaches Claude how to 
 > The target build **will change** as Foundry releases new builds. Check [`CHANGELOG.md`](CHANGELOG.md)
 > for the build each version of the skill was verified against.
 
-Current skill version: **1.0.0**
+Current skill version: **1.1.0**
 
 ## What it contains
 

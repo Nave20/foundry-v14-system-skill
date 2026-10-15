@@ -5,7 +5,7 @@ const TEMPLATES = "systems/__ID__/templates/actor";
 
 export default class __CLASS__ActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   static DEFAULT_OPTIONS = {
-    classes: ["__ID__", "actor"],
+    classes: ["__ID__", "actor", "standard-form"],
     position: { width: 600, height: 640 },
     window: { resizable: true },
     form: { submitOnChange: true },

@@ -3,7 +3,7 @@ const { ItemSheetV2 } = foundry.applications.sheets;
 
 export default class __CLASS__ItemSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
   static DEFAULT_OPTIONS = {
-    classes: ["__ID__", "item"],
+    classes: ["__ID__", "item", "standard-form"],
     position: { width: 480, height: 520 },
     window: { resizable: true },
     form: { submitOnChange: true }

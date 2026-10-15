@@ -3,7 +3,7 @@
 Usage:
     python new_system.py <id> "<Title>" [--author NAME] [--dest DIR] [--force]
 
-- <id>     lower-case identifier (letters, digits, hyphens); becomes the folder name
+- <id>     lower-case identifier (letters, digits, hyphens, underscores); becomes the folder name
 - --dest   parent folder (default: the Foundry user-data systems folder, if found)
 
 Placeholders replaced in file contents and names:
@@ -37,8 +37,9 @@ def main() -> int:
     ap.add_argument("--force", action="store_true", help="overwrite an existing folder")
     a = ap.parse_args()
 
-    if not re.fullmatch(r"[a-z0-9][a-z0-9-]*", a.id):
-        print("error: id must be lower-case letters, digits and hyphens", file=sys.stderr)
+    # Foundry's BasePackage.validateId allows /^[A-Za-z0-9-_]+$/; we also require lower case by convention
+    if not re.fullmatch(r"[a-z0-9][a-z0-9_-]*", a.id):
+        print("error: id must be lower-case letters, digits, hyphens or underscores", file=sys.stderr)
         return 2
     dest = Path(a.dest) / a.id
     if dest.exists():

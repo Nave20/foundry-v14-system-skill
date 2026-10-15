@@ -53,4 +53,5 @@ Treat it as a reference, not a template: it is far more complex than a typical s
 
 - The browser console (F12) inside Foundry shows `CONFIG`, `game.system`, `game.actors`, `CONFIG.Actor.dataModels`, and you can run `new Roll("1d20").evaluate()`.
 - `CONFIG.debug.hooks = true` logs every hook call.
+- Restarting the desktop app from a script: after killing the process, wait a few seconds before relaunching. An immediate relaunch can exit silently, because the previous instance still holds the single-instance lock. Then check that port 30000 is listening.
 - After changing `system.json`, return to Setup and relaunch the world. Changes to `.mjs` need a reload (F5). CSS, HBS and lang files hot-reload when `flags.hotReload` is set.

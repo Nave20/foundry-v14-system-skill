@@ -36,6 +36,7 @@ Code written from older tutorials (V10–V12) breaks or warns in V14. Check this
 | Sheets = `HandlebarsApplicationMixin(ActorSheetV2 / ItemSheetV2)` from `foundry.applications.*` | `ActorSheet` / `ItemSheet` (AppV1, now under `foundry.appv1.*`) |
 | `foundry.applications.apps.DocumentSheetConfig.registerSheet(Actor, id, Sheet, {...})` | `Actors.registerSheet(...)` |
 | `static DEFAULT_OPTIONS`, `static PARTS`, `static TABS`, `actions` with `data-action` | `defaultOptions`, `getData`, `activateListeners` with jQuery |
+| Sheet `classes` include `"standard-form"`, so that `{{formGroup}}` gets the core label/input row layout | bare classes, which stack every label above its input |
 | `_prepareContext(options)` returns the context; `this.element` is a plain `HTMLElement` | `getData()`, `html.find(...)` |
 | ActiveEffect changes in `effect.system.changes`, `type` is a string (`"add"`, `"override"`…) | `effect.changes`, numeric `mode` / `CONST.ACTIVE_EFFECT_MODES` |
 | `roll.toMessage(data, { messageMode })`, modes `public`/`gm`/`blind`/`self`/`ic`, setting `core.messageMode` | `rollMode`, `core.rollMode`, `CONST.DICE_ROLL_MODES` |

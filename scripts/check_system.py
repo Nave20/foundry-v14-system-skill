@@ -118,13 +118,21 @@ def main() -> int:
 
     # legacy API
     for p, txt in code.items():
+        # names bound locally from the namespaced API are fine, e.g.
+        # const TextEditor = foundry.applications.ux.TextEditor.implementation;  const { renderTemplate } = foundry.applications.handlebars;
+        aliases = set(re.findall(r"const\s+(\w+)\s*=\s*foundry\.", txt))
+        for group in re.findall(r"const\s*\{([^}]*)\}\s*=\s*foundry\.", txt):
+            aliases.update(n.split(":")[-1].strip() for n in group.split(",") if n.strip())
         for i, line in enumerate(txt.splitlines(), 1):
             s = line.strip()
             if s.startswith("//") or s.startswith("*"):
                 continue
             for pat, msg in LEGACY:
-                if re.search(pat, line):
+                m = re.search(pat, line)
+                if m:
                     if "foundry.appv1.sheets" in line and "Sheet" in msg:  # unregistering core v1 sheets is fine
+                        continue
+                    if re.match(r"\w+", m.group(0)) and re.match(r"\w+", m.group(0)).group(0) in aliases:
                         continue
                     warnings.append(f"{p.relative_to(root)}:{i}: {msg}")
 

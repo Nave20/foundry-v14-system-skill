@@ -47,7 +47,7 @@ Source of truth: `common/packages/base-system.mjs`, `base-package.mjs`, `_types.
 
 ## Field notes
 
-- **id**: lower-case, no spaces; it **must equal the folder name** in `Data/systems/`.
+- **id**: `BasePackage.validateId` allows only `/^[A-Za-z0-9-_]+$/`, so hyphens **and underscores** are fine. Use lower case by convention. The id **must equal the folder name** in `Data/systems/`.
 - **type**: `"system"` (added in V14, optional but recommended; it prevents installing the package as the wrong type).
 - **compatibility**: these are strings in V14. `minimum` is a generation (`"14"`) or a build (`"14.369"`). `verified` is the build you actually tested. Add `maximum` only to block future versions.
 - **esmodules**: the entry point(s). Prefer a single `.mjs` file that imports the rest. Paths are relative to the system root.
@@ -62,7 +62,7 @@ Source of truth: `common/packages/base-system.mjs`, `base-package.mjs`, `_types.
 - **primary/secondaryTokenAttribute**: a path (relative to `system`) to an object with `value` and `max`. It becomes the default bar of new prototype tokens.
 - **grid**: default scene grid `{type, distance, units, diagonals}`. `type` and `diagonals` come from `CONST.GRID_TYPES` and `CONST.GRID_DIAGONALS`.
 - **packs**: in V11+ each pack is a LevelDB **folder** at `path`. `type` is the Document name (`Actor`, `Item`, `JournalEntry`, `RollTable`, `Macro`, `Scene`, `Adventure`, `Cards`, `Playlist`, and since V14 `ActiveEffect`). Edit pack content in-game (unlock the pack), or build it from JSON/YAML with the `@foundryvtt/foundryvtt-cli` (`fvtt package pack`).
-- **languages**: `lang` is a BCP-47 code. Several files can share the same `lang`.
+- **languages**: `lang` is a BCP-47 code. Several files can share the same `lang`. Foundry loads a package's strings only for the client's current language (plus English as fallback). A single-language system, for example French only, can map the same file to both codes (`{"lang": "fr", "path": "lang/fr.json"}` and `{"lang": "en", "path": "lang/fr.json"}`) so its labels show even when the core UI is in English. This was verified in 14.369.
 - **relationships**: `{ "requires": [{ "id": "lib-x", "type": "module", "compatibility": {...} }], "recommends": [...] }`.
 - **socket: true** reserves the `system.<id>` socket channel (`game.socket.emit("system.mysys", data)`).
 - **flags.hotReload**: in dev mode, edits to CSS, HBS and JSON apply live without a reload.
