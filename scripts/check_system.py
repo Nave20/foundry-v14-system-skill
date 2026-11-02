@@ -36,6 +36,8 @@ LEGACY = [
     (r"(?<![\w.])loadTemplates\(|(?<![\w.])renderTemplate\(", "use foundry.applications.handlebars.* (namespaced)"),
     (r"(?<![\w.])TextEditor\.enrichHTML", "use foundry.applications.ux.TextEditor.implementation.enrichHTML"),
     (r"\bdata\.data\b|\bactor\.data\.data\b", "pre-V10 data access"),
+    (r"fog\.exploration\b|fog\s*:\s*\{\s*exploration\b", "fog.exploration is gone in V14 (silently dropped on write): use fog.mode / CONST.FOG_EXPLORATION_MODES"),
+    (r"occlusion\.mode\b(?!s)|occlusion\s*:\s*\{\s*mode\s*:", "Tile occlusion.mode is deprecated in V14: use occlusion.modes (array)"),
 ]
 
 

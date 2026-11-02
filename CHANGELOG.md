@@ -3,6 +3,13 @@
 Versions follow [semantic versioning](https://semver.org/): patch for fixes, minor for new content, major for a new Foundry generation or a restructure.
 Each entry records the Foundry build it was verified against.
 
+## 1.2.0 — 2026-11-02
+
+Verified against **Foundry VTT 14.369**. These lessons came from a module that builds multi-level scenes (walls, lights, notes, tiles, regions, teleport passages) from a script.
+
+- `references/v14-changes.md` (Canvas): scene images live on `Level` documents (`scene.background` is a read-only shim over `levels[0]`); placeables take a `levels` array and `Scene.initialLevel` picks the starting level; `fog.exploration` became `fog.mode`, and old-style write data is **silently dropped**, with no migration; Tile `occlusion.mode` became `occlusion.modes`; Tile `x`/`y` is the centre anchor while Region rectangles keep the top-left corner; relative UUIDs stored by `DocumentUUIDField({relativize: true})` (for example teleport destinations) must go through `parseUuid(uuid, {relative})` before you compare them.
+- `check_system.py`: flags `fog.exploration` and Tile `occlusion.mode`.
+
 ## 1.1.0 — 2026-10-15
 
 Verified against **Foundry VTT 14.369**. These lessons came from building a five-actor-type system with the skill.

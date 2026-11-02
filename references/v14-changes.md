@@ -55,6 +55,12 @@ Timeline: Prototype 14.349–353 · Development 354–355 · Testing 356–358 �
 - The anchor or pivot changed for Tiles and `RectangleShapeData`. `layerClass` in CONFIG is deprecated.
 - Token movement API: `TokenDocument#move` resolves at the end, plus planned movement, `Scene#moveTokens`, and `CONFIG.Token.movement.actions`.
 - Darkness and wall fixes. Line-of-sight checks consider the viewed level and the token's level.
+- Scene images live on the embedded `Level` documents (`scene.levels`): `background.src`, `foreground.src` and `elevation {bottom, top}` per level, plus texture settings under `textures.*`. `scene.background`, `scene.foreground` and `backgroundColor` are read-only shims over `levels[0]`, so a `background` key in `Scene.create` data does nothing. Create the scene, then update or create its `Level` documents.
+- Walls, lights, sounds, notes, tiles and regions have a `levels` field (`SceneLevelsSetField`, an array of Level ids). If it is empty, the placeable shows on every level. `Scene.initialLevel` (a Level id) chooses the level a scene opens on.
+- `fog.exploration` (boolean) became `fog.mode`, a value of `CONST.FOG_EXPLORATION_MODES` (`DISABLED` 0, `INDIVIDUAL` 1, `SHARED` 2). Only a **read** shim exists and no data migration: `fog: {exploration: false}` in create or update data is dropped without warning, so the scene keeps `INDIVIDUAL`.
+- Tile `occlusion.mode` (number) became `occlusion.modes` (a set of `CONST.OCCLUSION_MODES`). Old data is migrated, and the shim lasts until V16.
+- A Tile's `x`/`y` is its anchor point, and `texture.anchorX/Y` default to 0.5 (the centre). Coordinates computed from a top-left corner need `+ width/2` and `+ height/2`. Region `rectangle` shapes still take the top-left corner (`anchorX/Y` default 0).
+- `DocumentUUIDField({relative: true, relativize: true})` stores UUIDs relative to the owning document. For example, teleport-token `system.destinations` can hold `"...Scene.x.Region.y"`. Before comparing one with `doc.uuid`, resolve it with `foundry.utils.parseUuid(uuid, {relative: owner}).uuid`.
 
 ## Migration checklist for an older (V11–V13) system
 
