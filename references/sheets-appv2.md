@@ -197,6 +197,8 @@ Register custom helpers with `Handlebars.registerHelper` in `init`.
 
 **Custom input widgets** (clickable dots, toggles…): keep the value in an `<input type="hidden" name="system.x" data-dtype="Number">`. The click handler sets `input.value`, then calls `input.dispatchEvent(new Event("change", { bubbles: true }))`. The form's change listener (`_onChangeForm`) then submits as for any input, and `FormDataExtended` casts the value using `data-dtype`.
 
+**Controls that must not save the sheet** (a roll-builder bar, a "use specialty" checkbox inside the sheet): every `change` event bubbles to the form, and `submitOnChange` then submits and re-renders. Listen on the widget's container and call `event.stopPropagation()`. The container is a descendant of the form, so its listener runs first. Keep transient UI state (current selection, toggles) in private instance fields and re-apply it in `_onRender`, because every submit re-renders the parts.
+
 **Dynamic keys** (traits a GM adds at runtime): an `ObjectField` accepts form names such as `system.extra.<key>.value`. The update merges into the stored object, so keys not rendered on the sheet are kept.
 
 **Suggestions on a text input**: a native `<datalist>` cannot be styled (Chromium draws it). Build a small menu instead: append it to `this.element`, so it inherits the sheet's CSS variables. Call `preventDefault()` on the menu's `mousedown`, so the input keeps focus and the click registers. On Escape, call `stopPropagation()`, otherwise Foundry also closes the sheet.

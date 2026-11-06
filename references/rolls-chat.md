@@ -23,6 +23,23 @@ await roll.toMessage({
 - Custom Roll class: `class MyRoll extends Roll { static CHAT_TEMPLATE = "systems/mysys/templates/chat/roll.hbs"; }`, then `CONFIG.Dice.rolls.push(MyRoll)` so it can be rebuilt from chat messages.
 - Custom die: extend `foundry.dice.terms.Die`, set `static DENOMINATION = "s"`, and register `CONFIG.Dice.terms.s = MyDie`.
 
+## Custom result card (dice pools, success counting)
+
+Verified in 14.369. To show your own card (for example "3 successes" instead of the dice total) while keeping a real `Roll` on the message, so that 3D dice modules and re-rendering still work:
+
+```js
+const roll = await new Roll(`${pool}d10`).evaluate();
+const results = roll.dice[0].results.map(r => r.result);
+const content = await foundry.applications.handlebars.renderTemplate("systems/mysys/templates/chat/pool.hbs", { results, successes });
+await roll.toMessage({ speaker: ChatMessage.implementation.getSpeaker({ actor }), content, flags: { mysys: { successes } } });
+```
+
+- `ChatMessage#renderHTML` keeps your `content` **only if it contains HTML elements**. Plain text, or a number such as the default total, is replaced by the standard roll template (`#renderRollContent` in `client/documents/chat-message.mjs`). Wrap the card in a `<div>`.
+- When the viewer may not see the content (private or blind roll), Foundry still shows the standard "rolled privately" roll render.
+- Put the computed outcome in `flags` too, so later code (a damage button, an opposed roll) can read it without parsing HTML.
+- The chat log draws message bodies on a light parchment background, even with the dark interface. Pick colours that read on it, not the sheet's dark palette.
+- Keep house rules (difficulty, what a 10 or a 1 does, critical thresholds…) in a world `Object` setting with defaults merged at read time (`{ ...DEFAULTS, ...game.settings.get(...) }`), and give the GM a `registerMenu` window to edit them. Pure functions such as `countSuccesses(results, rules)` can then be checked in the console with known dice.
+
 ## Example: an "ability check" method on the Actor
 
 ```js

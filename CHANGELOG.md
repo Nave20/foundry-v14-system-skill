@@ -3,6 +3,21 @@
 Versions follow [semantic versioning](https://semver.org/): patch for fixes, minor for new content, major for a new Foundry generation or a restructure.
 Each entry records the Foundry build it was verified against.
 
+## 1.3.0 — 2026-11-06
+
+Verified against **Foundry VTT 14.369**. These lessons came from the third session on the same system: trait profiles with JSON export and import, a dice pool with a custom chat card.
+
+- `references/rolls-chat.md`, new section **Custom result card**:
+  - keeping a real `Roll` with your own HTML `content` (`toMessage({ content })`, kept only when it contains elements);
+  - outcome in `flags`;
+  - colours that read on the light parchment of the chat log;
+  - house rules in a world setting with defaults merged at read time.
+- `references/sheets-appv2.md`: controls inside a sheet that must not submit it (`stopPropagation` on `change` in a container), and keeping transient UI state across re-renders.
+- `references/api-lookup.md`:
+  - `foundry.utils` cannot be monkey-patched;
+  - testing exports and imports without real file dialogs;
+  - importing system modules in the console to test pure functions.
+
 ## 1.2.0 — 2026-11-06
 
 Verified against **Foundry VTT 14.369**. These lessons came from the second working session on a five-actor-type system: clickable dots, GM configuration window, welcome scene.
