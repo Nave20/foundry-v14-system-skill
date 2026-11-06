@@ -3,6 +3,24 @@
 Versions follow [semantic versioning](https://semver.org/): patch for fixes, minor for new content, major for a new Foundry generation or a restructure.
 Each entry records the Foundry build it was verified against.
 
+## 1.2.0 — 2026-11-06
+
+Verified against **Foundry VTT 14.369**. These lessons came from the second working session on a five-actor-type system: clickable dots, GM configuration window, welcome scene.
+
+- `references/sheets-appv2.md`:
+  - custom input widgets (a hidden input plus a bubbling `change` event) and `data-dtype` casting;
+  - every key of an `ArrayField` row must be in the form;
+  - `ObjectField` for keys added at runtime;
+  - why `<datalist>` cannot be styled, and how to build a suggestion menu (focus and Escape pitfalls);
+  - per-subtype CSS classes through `_initializeApplicationOptions`;
+  - the core form footer part;
+  - GM configuration windows with `registerMenu` (`restricted`) and a world `Object` setting that re-renders open sheets.
+- New section **UI entry points**: left toolbar tools in the V14 `getSceneControlButtons` record, and the 14.369 pitfall that toolbar clicks are ignored while `canvas.ready` is false (no active scene), with two fallbacks: a `renderSceneControls` listener and a Settings sidebar button.
+- `references/v14-changes.md`: scene images now live on the first `Level` (`levels[0].background.src`), with a verified recipe for creating a scene that shows an image.
+- `references/manifest.md`: the `background` field (join screen and world tile), read at server start.
+- `references/api-lookup.md`: testing in a live world without disturbing the user (close the test client), launching a world through `POST /setup`, what needs a restart and what needs only a reload, and spotting a stale client.
+- `SKILL.md`: two new rows in the V14 pitfalls table (scene levels, toolbar without a scene).
+
 ## 1.1.0 — 2026-10-15
 
 Verified against **Foundry VTT 14.369**. These lessons came from building a five-actor-type system with the skill.

@@ -52,6 +52,8 @@ Timeline: Prototype 14.349–353 · Development 354–355 · Testing 356–358 �
 
 ### Canvas (only if your system touches it)
 - Scene **Levels** (multi-level scenes) were added, with a `Level` document concept, `Scene#getSurfaces`, and elevation-aware vision and sound.
+  - The background image now lives on the level: `scene.levels.contents[0].background.src`. Fit and offset are under `textures`. `scene.background` is only a read-only compatibility shim (`BaseScene._LEVELS_PROPERTY_MAP`).
+  - To create a scene with an image (verified in 14.369): `Scene.implementation.create({ name, width, height, padding: 0, grid: { type: CONST.GRID_TYPES.GRIDLESS }, tokenVision: false, levels: [{ name, background: { src, color: "#000000" } }] })`, then `scene.activate()`. To change the image later, update the level document, not the scene.
 - The anchor or pivot changed for Tiles and `RectangleShapeData`. `layerClass` in CONFIG is deprecated.
 - Token movement API: `TokenDocument#move` resolves at the end, plus planned movement, `Scene#moveTokens`, and `CONFIG.Token.movement.actions`.
 - Darkness and wall fixes. Line-of-sight checks consider the viewed level and the token's level.

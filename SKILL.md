@@ -46,6 +46,8 @@ Code written from older tutorials (V10–V12) breaks or warns in V14. Check this
 | `ChatLog.CHAT_COMMANDS` | `ChatLog.MESSAGE_PATTERNS` (deprecated) |
 | `CONFIG.statusEffects` as an object keyed by id | an array (still shimmed) |
 | `foundry.applications.handlebars.loadTemplates`, `foundry.applications.ux.TextEditor.implementation` | bare globals `loadTemplates`, `TextEditor` |
+| Scene image in `levels[0].background.src` (create scenes with `levels: [{ background: { src } }]`) | `scene.background.src` (read-only shim) |
+| Toolbar buttons only work once a scene is active (`canvas.ready`), so add a fallback entry point (Settings sidebar, or a `renderSceneControls` listener) | assuming `getSceneControlButtons` tools always respond |
 
 `references/v14-changes.md` holds the full list, sourced from the release notes.
 

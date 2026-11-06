@@ -86,3 +86,7 @@ Data/systems/mysys/
 ├── packs/                    ← LevelDB folders (generated)
 └── assets/                   ← icons, images
 ```
+
+## Background image
+
+`"background": "systems/<id>/assets/banner.webp"` gives the default banner of worlds that use the system. It is shown behind the join screen and on the world tile (verified in 14.369). It is read when the server starts, so restart Foundry after changing it. A world can override it in its own configuration. Use a 16:9 image, at least 1920×1080 (3840×2160 for sharp results on large screens).

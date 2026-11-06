@@ -122,6 +122,8 @@ Each sheet should list the `types` it supports. A different class per type is fi
 
 `this.isEditable` (read-only when locked or not owned) is passed to the context as `editable`.
 
+**Per-subtype CSS classes** (one colour per actor type, for example): override `_initializeApplicationOptions(options)`, call `super`, then ``options.classes.push(`type-${options.document.type}`)``. `options.document` is already set there, and the class lands on the application root.
+
 ## 4. PARTS (HandlebarsApplicationMixin)
 
 `HandlebarsTemplatePart` = `{ template, id?, classes?, root?, templates?: [partials], scrollable?: [selectors], forms?: {selector: config} }`.
@@ -191,7 +193,13 @@ Use `source.x` (raw) rather than `system.x` (prepared) when active effects may h
 Core Handlebars helpers: `localize`, `formGroup`, `formInput`, `formField` (alias), `selectOptions`, `radioBoxes`, `numberInput`, `rangePicker`, `filePicker`, `checked`, `disabled`, `concat`, `ifThen`, `numberFormat`, `timeSince`, `eq`, `ne`, `lt`, `gt`, `lte`, `gte`, `not`, `and`, `or`, `object`.
 Register custom helpers with `Handlebars.registerHelper` in `init`.
 
-**Editable lists in a form** (an `ArrayField` of `SchemaField` rows): name the inputs `system.<list>.<index>.<key>`, for example `system.backgrounds.0.name`. Form data expands these to `{0: {...}, 1: {...}}`, and `ArrayField._cast` turns an index-keyed plain object back into an array (`common/data/fields.mjs`). Render **every** row in the form, because the submitted array replaces the stored one. For add and remove buttons, use actions that `deepClone(this.document._source.system.<list>)`, then `push` or `splice`, then `update` the whole array.
+**Editable lists in a form** (an `ArrayField` of `SchemaField` rows): name the inputs `system.<list>.<index>.<key>`, for example `system.backgrounds.0.name`. Form data expands these to `{0: {...}, 1: {...}}`, and `ArrayField._cast` turns an index-keyed plain object back into an array (`common/data/fields.mjs`). Render **every** row in the form, because the submitted array replaces the stored one. The same goes for every key of each row: a key with no input (for example a category, or a value edited by a custom widget) is lost on the next submit, so carry it in an `<input type="hidden">`. For add and remove buttons, use actions that `deepClone(this.document._source.system.<list>)`, then `push` or `splice`, then `update` the whole array.
+
+**Custom input widgets** (clickable dots, toggles…): keep the value in an `<input type="hidden" name="system.x" data-dtype="Number">`. The click handler sets `input.value`, then calls `input.dispatchEvent(new Event("change", { bubbles: true }))`. The form's change listener (`_onChangeForm`) then submits as for any input, and `FormDataExtended` casts the value using `data-dtype`.
+
+**Dynamic keys** (traits a GM adds at runtime): an `ObjectField` accepts form names such as `system.extra.<key>.value`. The update merges into the stored object, so keys not rendered on the sheet are kept.
+
+**Suggestions on a text input**: a native `<datalist>` cannot be styled (Chromium draws it). Build a small menu instead: append it to `this.element`, so it inherits the sheet's CSS variables. Call `preventDefault()` on the menu's `mousedown`, so the input keeps focus and the click registers. On Escape, call `stopPropagation()`, otherwise Foundry also closes the sheet.
 
 Fields marked `gmOnly` reject updates from non-GM users. Do not render their inputs for players (`{{#if isGM}}`), otherwise a player's form submission would include them.
 
@@ -240,6 +248,33 @@ const choice = await DialogV2.wait({ window: { title: "…" }, content: "…",
 
 For a standalone app, extend `HandlebarsApplicationMixin(ApplicationV2)` with `tag: "form"` and `form: { handler: MyApp.#onSubmit }`, where the handler signature is `(event, form, formData)` and `formData.object` holds the values.
 V14 can pop any AppV2 out into a separate browser window (`detachWindow()`), so do not rely on the global `document`. Use `this.element.ownerDocument`.
+A form app can use the core footer part: `footer: { template: "templates/generic/form-footer.hbs" }`, with `context.buttons = [{ type: "submit", icon, label }, …]`.
+
+**GM configuration window** (world-level settings that need a real UI):
+```js
+game.settings.register("mysys", "traits", { scope: "world", config: false, type: Object, default: {},
+  onChange: () => { for (const app of foundry.applications.instances.values()) if (app.document instanceof Actor) app.render(); } });
+game.settings.registerMenu("mysys", "traitsMenu", { name: "MYSYS.Traits.Title", label: "MYSYS.Traits.Open",
+  icon: "fa-solid fa-list-check", type: TraitsConfig, restricted: true });   // restricted = GM only
+```
+The menu shows under Game Settings → Configure Settings → the system's category. Keep stable internal keys and store only display overrides (rename, hide, add), so rolls and data paths never change.
+
+## 11b. UI entry points outside sheets
+
+- **Left toolbar button** (`getSceneControlButtons` hook; in V14 `controls` is a record keyed by control name):
+  ```js
+  Hooks.on("getSceneControlButtons", controls => {
+    controls.tokens.tools.myTool = { name: "myTool", title: "MYSYS.Tool", icon: "fa-solid fa-gear",
+      order: Object.keys(controls.tokens.tools).length, button: true, visible: game.user.isGM, onChange: () => openMyApp() };
+  });
+  ```
+  **Pitfall (14.369): with no active scene, `canvas.ready` is false and `SceneControls` ignores every click in the toolbar** (`#onChangeControl` and `#onChangeTool` return early). A world with no scene therefore looks broken. Either make sure a scene exists, or add a fallback listener that only acts when `!canvas.ready`, so it never fires twice:
+  ```js
+  Hooks.on("renderSceneControls", (app, element) => {
+    element.querySelector('button[data-tool="myTool"]')?.addEventListener("click", () => { if (!canvas.ready) openMyApp(); });
+  });
+  ```
+- **Settings sidebar button** (always works): `Hooks.on("renderSettings", (app, element) => …)` and insert a `<button>` after `element.querySelector("section.settings h4.divider")`. Guard against duplicates, because the sidebar re-renders.
 
 ## 12. CSS
 

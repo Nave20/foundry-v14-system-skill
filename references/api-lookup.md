@@ -55,3 +55,10 @@ Treat it as a reference, not a template: it is far more complex than a typical s
 - `CONFIG.debug.hooks = true` logs every hook call.
 - Restarting the desktop app from a script: after killing the process, wait a few seconds before relaunching. An immediate relaunch can exit silently, because the previous instance still holds the single-instance lock. Then check that port 30000 is listening.
 - After changing `system.json`, return to Setup and relaunch the world. Changes to `.mjs` need a reload (F5). CSS, HBS and lang files hot-reload when `flags.hotReload` is set.
+
+## Testing in a live world without disturbing the user
+
+- A browser test client can join the same world as the same GM user while the user's own client stays connected. **Close the test tab afterwards.** Otherwise the extra GM session can interfere with the user's client (for example, the world seems to hang when they try to launch or rejoin it).
+- After a server restart the world is not running. A client on `/setup` can launch it with `fetch("/setup", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "launchWorld", world: "<world-id>" }) })`, then go to `/join`.
+- Hot reload only covers CSS and templates. Changes to `system.json` (version, `background`, languages, packs) need a full server restart, and JS module changes need at least a client reload (F5).
+- If the user still sees old behaviour after reloading, open a fresh test client: when the fresh client works, the user's client is stale, and logging out then back in fixes it.
