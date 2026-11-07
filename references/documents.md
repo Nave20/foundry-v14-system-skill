@@ -135,3 +135,20 @@ User queries (V13+, `User.queryMany` added in V14) are the preferred way to ask 
 ## Permissions
 
 `doc.isOwner`, `doc.testUserPermission(game.user, "OBSERVER")`, `doc.canUserModify(user, "update")`, `game.user.isGM`, `doc.ownership`. Only the GM, or an owner, can update a document. Route player-triggered changes to documents they do not own through a GM, using a query or a socket.
+
+## Enforcing a derived maximum on update (verified in 14.369)
+
+To cap a stored value by a maximum derived from other fields (for example a resource limited to the sum of two traits), clamp it in the document's `_preUpdate`. Compute the maximum from the data **as it will be after the update**, because the same form submission may change the traits too:
+
+```js
+async _preUpdate(changes, options, user) {
+  if ( (await super._preUpdate(changes, options, user)) === false ) return false;
+  if ( changes.system?.pool !== undefined ) {
+    const after = foundry.utils.mergeObject(this._source.system, changes.system, { inplace: false });
+    const max = computeMax(after);
+    if ( changes.system.pool > max ) changes.system.pool = max;
+  }
+}
+```
+
+Expose the same maximum in `prepareDerivedData()` for display. When it depends on a world setting, call `actor.reset()` on the affected actors after the setting changes, so that derived data is prepared again, then re-render their open sheets.

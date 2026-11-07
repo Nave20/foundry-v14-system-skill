@@ -40,6 +40,27 @@ await roll.toMessage({ speaker: ChatMessage.implementation.getSpeaker({ actor })
 - The chat log draws message bodies on a light parchment background, even with the dark interface. Pick colours that read on it, not the sheet's dark palette.
 - Keep house rules (difficulty, what a 10 or a 1 does, critical thresholds…) in a world `Object` setting with defaults merged at read time (`{ ...DEFAULTS, ...game.settings.get(...) }`), and give the GM a `registerMenu` window to edit them. Pure functions such as `countSuccesses(results, rules)` can then be checked in the console with known dice.
 
+### Buttons on a chat card (re-roll, extend, apply damage)
+
+Verified in 14.369. Chat messages are re-rendered (on reload, scroll, edit), so bind listeners in the `renderChatMessageHTML` hook, which receives `(message, html, context)` with `html` as a plain `HTMLElement`, not in the code that created the message:
+
+```js
+Hooks.on("renderChatMessageHTML", (message, html) => {
+  const button = html.querySelector?.(".mysys-card [data-mysys-action='extend']");
+  if ( !button ) return;
+  const data = message.getFlag("mysys", "roll");
+  const actor = fromUuidSync(data?.actorUuid);
+  if ( !actor?.isOwner ) return button.remove();          // only the owner and the GM see it
+  button.addEventListener("click", () => extendRoll(message));
+});
+```
+
+Use your own `data-*` attribute rather than `data-action`, which belongs to ApplicationV2 action dispatch. Store everything a follow-up roll needs (pool, difficulty, running total, `actor.uuid`) in the message flags.
+
+### Deterministic dice for tests
+
+`CONFIG.Dice.randomUniform` is the source of randomness for every die (verified: a d10 shows `Math.ceil((1 - u) * 10)`, so `u = 0.35` gives 7, `0.65` gives 4 and `0.95` gives 1). Replace it temporarily with a function that returns a sequence, roll, then restore the original. This makes "a 7 and a 1" style rules testable in a live world.
+
 ## Example: an "ability check" method on the Actor
 
 ```js

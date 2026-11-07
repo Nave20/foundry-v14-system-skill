@@ -3,6 +3,15 @@
 Versions follow [semantic versioning](https://semver.org/): patch for fixes, minor for new content, major for a new Foundry generation or a restructure.
 Each entry records the Foundry build it was verified against.
 
+## 1.4.0 — 2026-11-07
+
+Verified against **Foundry VTT 14.369**. These lessons came from the fourth session on the same system: resources spent during rolls, extending rolls from the chat, a clickable health track.
+
+- `references/rolls-chat.md`:
+  - buttons on chat cards bound in the `renderChatMessageHTML` hook (plain `HTMLElement`, owner check, a custom `data-*` attribute, follow-up data in flags);
+  - deterministic dice for tests through `CONFIG.Dice.randomUniform`, with the verified mapping from `u` to the face.
+- `references/documents.md`: capping a stored value by a derived maximum in `_preUpdate`, using the post-update data (`mergeObject(..., { inplace: false })`), and `actor.reset()` after a world setting that the derived data depends on changes.
+
 ## 1.3.0 — 2026-11-06
 
 Verified against **Foundry VTT 14.369**. These lessons came from the third session on the same system: trait profiles with JSON export and import, a dice pool with a custom chat card.
