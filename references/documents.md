@@ -130,6 +130,11 @@ game.socket.on("system.mysys", data => { /* runs on the other clients */ });
 game.socket.emit("system.mysys", { action: "ping" });
 ```
 
+Verified in 14.369:
+- The listener receives the **sender's user id as its second argument**: the server relays with `broadcast.emit(event, data, senderId)` (see `resources/app/dist/server/sockets.mjs`). Use it for permission checks: `game.socket.on("system.mysys", (data, senderId) => { const user = game.users.get(senderId); … })`. Never trust a user id inside `data`: a player can emit anything from the console.
+- The emitting client does not receive its own message. To have exactly one GM act, check `game.users.activeGM?.isSelf` in the listener.
+- `"socket": true` is read from `system.json` at startup: restart Foundry after adding it.
+
 User queries (V13+, `User.queryMany` added in V14) are the preferred way to ask a GM client to perform a privileged update. Register `CONFIG.queries["mysys.doThing"] = async (queryData, {timeout}) => result` in `init`, then call `await game.users.activeGM.query("mysys.doThing", data, {timeout: 5000})`. The querying user needs the `QUERY_USER` permission. Check the handler signature in `client/documents/collections/users.mjs` before relying on its exact arguments.
 
 ## Permissions
@@ -163,3 +168,19 @@ if ( (changes.system?.a !== undefined) || (changes.system?.b !== undefined) ) {
   if ( after.a + after.b > 20 ) changes.system.a = 20 - Math.min(20, after.b);   // b wins
 }
 ```
+
+## Filling a world compendium from a script (verified in 14.369)
+
+Content that must not be published with the system (homebrew items, images without a free licence) can live in a compendium of the world:
+
+```js
+let pack = game.packs.get("world.my-items");
+if ( !pack ) pack = await foundry.documents.collections.CompendiumCollection.createCompendium({ label: "My items", name: "my-items", type: "Item" });
+if ( pack.locked ) await pack.configure({ locked: false });
+const index = await pack.getIndex();
+if ( index.size ) await Item.deleteDocuments(index.map(i => i._id), { pack: pack.collection });
+const folder = await Folder.create({ name: "Weapons", type: "Item" }, { pack: pack.collection });
+await Item.createDocuments(data.map(d => ({ ...d, folder: folder.id })), { pack: pack.collection });
+```
+
+Image paths are relative to the `Data` folder (`my-items/images/x.png`), so files copied outside the system folder are served without being part of the system repository.

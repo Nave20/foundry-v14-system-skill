@@ -3,6 +3,21 @@
 Versions follow [semantic versioning](https://semver.org/): patch for fixes, minor for new content, major for a new Foundry generation or a restructure.
 Each entry records the Foundry build it was verified against.
 
+## 1.6.0 — 2026-11-08
+
+Verified against **Foundry VTT 14.369**. These lessons came from the sixth session on the same system: weapons, a combat chat card and werewolf forms.
+
+- `references/sheets-appv2.md`:
+  - a tab for some document types only (`_configureRenderParts` and `_prepareTabs`);
+  - controls shared by several tabs belong in a part outside the tabs;
+  - new section 11d "Layout and security pitfalls": the core hides empty `.hint`, `url()` in a CSS variable resolves against the stylesheet, `mask` clips `filter`, `data-tooltip` renders HTML.
+- `references/rolls-chat.md`:
+  - `evaluateSync` refuses dice;
+  - new section "Interactive chat card that advances": state in flags, content sanitisation (`hidden` stripped), GM-only controls and secrets, player actions through the socket, double-click guard, testing the rules with Node.
+- `references/documents.md`: the socket listener's second argument is the sender id given by the server; filling a world compendium from a script.
+- `references/data-models.md`: form-dependent derived values, before and after `super.prepareDerivedData()`.
+- `SKILL.md`: a scripted click works on hidden elements; check visibility or use the real mouse.
+
 ## 1.5.0 — 2026-11-08
 
 Verified against **Foundry VTT 14.369**. These lessons came from the fifth session on the same system: animated gauges in the sheet header.

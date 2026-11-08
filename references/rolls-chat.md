@@ -9,6 +9,9 @@ const roll = new Roll("1d20 + @abilities.str.mod + @prof", actor.getRollData(), 
 await roll.evaluate();                 // async (needed for interactive / manual dice fulfillment)
 roll.total; roll.dice; roll.terms; roll.result;
 roll.evaluateSync({ strict: false });  // only for deterministic formulas (no dice), e.g. computing a modifier
+// Verified in 14.369: with dice, evaluateSync() throws ("cannot be synchronously evaluated") and
+// evaluateSync({ strict: false }) returns no results. For a synchronous dice draw (e.g. inside a pure
+// state machine), draw the faces yourself: Math.ceil(CONFIG.Dice.randomUniform() * faces). No dice animation.
 Roll.validate("2d6+3");                // is the formula syntactically valid?
 
 await roll.toMessage({
@@ -75,6 +78,18 @@ async rollAbility(key, { messageMode } = {}) {
   return roll;
 }
 ```
+
+## Interactive chat card that advances (verified in 14.369)
+
+A card that several people complete in turn (attack, then the target's defence, then damage…):
+
+- Keep the whole state in a flag (`flags.mysys.state`) and re-render `content` from it on every step: `await message.update({ content: await renderTemplate(TPL, ctx), "flags.mysys.state": state })`. `null` replaces an object and arrays are replaced whole, so stale nested keys are not a problem.
+- **Message content is sanitised.** The `hidden` attribute is stripped (use a CSS class to fold a panel); buttons, inputs and `data-*` attributes survive.
+- **Everyone receives the content and the flags.** Remove GM-only controls in `renderChatMessageHTML` (`if ( !game.user.isGM ) html.querySelectorAll("[data-gm]").forEach(e => e.remove())`), but do not put secrets in the content: a GM's hidden bonus must not appear as text or as an input `value` in the stored HTML. Fill such inputs in the hook from the flags, on the GM client only.
+- Bind the buttons in `renderChatMessageHTML`; the listeners are re-attached at every render, including after a reload.
+- **A player cannot update a message they did not create.** Send their action to the active GM through the system socket (see `documents.md`), and check permissions there with the sender id given by the server.
+- Guard against double clicks on the executing client (a `Set` of message ids in progress) and keep an "applied" flag so a final action (apply damage) runs once.
+- Put the rules that drive the card (state transitions, recalculation after a correction) in a module without Foundry imports and test it with Node (`node --test "tests/*.test.mjs"`; Node 24 treats a bare directory argument as a file).
 
 ## Chat messages without a roll
 

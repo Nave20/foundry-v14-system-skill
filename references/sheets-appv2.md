@@ -150,6 +150,23 @@ Each sheet should list the `types` it supports. A different class per type is fi
 
 `tab.cssClass` contains `active` for the current tab. The current tab is stored in `this.tabGroups.primary`. Change it with `this.changeTab("items", "primary")`.
 
+**A tab for some document types only** (verified in 14.369). Declare the part and the tab for everyone, then drop both for the other types:
+
+```js
+_configureRenderParts(options) {
+  const parts = super._configureRenderParts(options);
+  if ( this.document.type !== "werewolf" ) delete parts.forms;
+  return parts;
+}
+_prepareTabs(group) {
+  const tabs = super._prepareTabs(group);
+  if ( (group === "primary") && (this.document.type !== "werewolf") ) delete tabs.forms;
+  return tabs;
+}
+```
+
+**Controls shared by several tabs go in a part outside the tabs.** A roll bar or a confirmation panel placed inside one tab's `<section>` is hidden whenever another tab is active, even if an action from that other tab fills it. Give it its own part, declared after the tab parts, so it renders below them in every tab.
+
 ## 6. Context
 
 `DocumentSheetV2._prepareContext` already provides: `document`, `source` (`_source`), `fields` (document schema fields), `editable`, `user`, `rootId`, and `tabs` (single group).
@@ -290,6 +307,13 @@ Gauges drawn in SVG or CSS (a resource bar, a dial, a liquid level) work well in
 - Respect `@media (prefers-reduced-motion: reduce)`: disable CSS animations, and draw the final state once instead of starting the loop.
 - **Custom rows inside a `.form-group` inherit core flex sizes.** In a `standard-form` sheet, the core gives the children of `.form-group` flex weights (measured: the label `1 1 0%`, another child `2 1 0%`). A row "label + gauge + buttons" then squeezes the gauge to a few pixels. Override with a selector at least as specific as the core one: `.mysys .form-group.my-row > label { flex: 0 0 auto; }` and `.mysys .form-group.my-row > .gauge { flex: 1 1 auto; }`.
 - To preview a widget's look before coding it in the sheet, a standalone HTML page or an inline preview is much cheaper than a test world: the same SVG and CSS run unchanged.
+
+## 11d. Layout and security pitfalls (verified in 14.369)
+
+- **The core hides empty `.hint` elements.** In a CSS grid row, an empty `<span class="hint">` disappears, so the following cells shift one column left. Render a placeholder ("—") instead of an empty hint.
+- **A relative `url()` inside a CSS custom property is resolved against the stylesheet that reads `var()`**, not against the page. `style="--img: url('systems/mysys/assets/a.svg')"` used in `mysys.css` becomes `/systems/mysys/styles/systems/mysys/assets/a.svg`. Pass an absolute route from the context: `foundry.utils.getRoute("systems/mysys/assets/a.svg")`.
+- **`mask` clips `filter`.** Masking applies after filtering, so a `drop-shadow` glow on a masked element (an SVG silhouette tinted with `background: currentColor; mask: url(…)`) is cut at the edge of the shape. Put the filter on a wrapper element.
+- **`data-tooltip` content is rendered as HTML.** Handlebars escaping is undone when the browser reads the attribute, so user text (an item field) in `data-tooltip` can inject markup and scripts into another user's client. Keep user text out of `data-tooltip`, or display it as plain text next to the icon.
 
 ## 12. CSS
 
