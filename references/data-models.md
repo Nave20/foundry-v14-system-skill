@@ -151,6 +151,8 @@ static migrateData(source) {
 ```
 
 - `migrateData` runs on load **and** on every update delta, so make it idempotent and tolerant of partial input.
+- Verified in 14.369: promoting a value stored in a list entry to its own field (for example a background `{ nom: "Avatar", valeur: 3 }` becoming `system.avatar`). Guard with `source.avatar === undefined && Array.isArray(source.historiques)`, so update deltas that do not touch these keys pass through unchanged.
+- A `NumberField({ min: 1 })` rejects an update to 0: `actor.update()` throws a validation error and the stored value stays. Clamp in the UI as well. For a generic "click a dot" widget, read the minimum from the schema: `this.actor.system.schema.getField("avatar")?.min ?? 0`.
 - Use `static shimData(data)` to add backward-compatible read aliases with deprecation warnings.
 - For heavy, one-time migrations, store a `schemaVersion` world setting and update documents in a `ready` hook (GM only). Use `Actor.updateDocuments([...])` in batches, and also migrate compendium packs: `pack.getDocuments()` after `pack.configure({locked:false})`.
 

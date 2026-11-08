@@ -3,6 +3,20 @@
 Versions follow [semantic versioning](https://semver.org/): patch for fixes, minor for new content, major for a new Foundry generation or a restructure.
 Each entry records the Foundry build it was verified against.
 
+## 1.5.0 — 2026-11-08
+
+Verified against **Foundry VTT 14.369**. These lessons came from the fifth session on the same system: animated gauges in the sheet header.
+
+- `references/sheets-appv2.md`, new section 11c "Animated widgets in a sheet":
+  - animating across re-renders by passing the last displayed value to the new widget;
+  - stopping `requestAnimationFrame` loops with `isConnected`, unique SVG ids per widget;
+  - keeping repeating CSS animations in step with a negative delay from a shared clock;
+  - keyframes on `transform` replacing a static `transform`, `prefers-reduced-motion`;
+  - core flex sizes of `.form-group` children squeezing custom rows, and the override.
+- `references/data-models.md`: promoting a list entry to its own field in `migrateData`; `NumberField({ min })` rejecting updates, and reading the minimum from the schema.
+- `references/documents.md`: a shared capacity where one value wins, enforced in `_preUpdate`.
+- `SKILL.md`: joining a passwordless test world and launching a world from a script (`/join` with `userId`, `/setup` `launchWorld`).
+
 ## 1.4.0 — 2026-11-07
 
 Verified against **Foundry VTT 14.369**. These lessons came from the fourth session on the same system: resources spent during rolls, extending rolls from the chat, a clickable health track.

@@ -152,3 +152,14 @@ async _preUpdate(changes, options, user) {
 ```
 
 Expose the same maximum in `prepareDerivedData()` for display. When it depends on a world setting, call `actor.reset()` on the affected actors after the setting changes, so that derived data is prepared again, then re-render their open sheets.
+
+## A shared capacity where one value wins (verified in 14.369)
+
+Some games share one track between two values, where one of them takes precedence (for example 20 boxes shared by two resources, the second one pushing the first back). Enforce it in the same `_preUpdate`, again from the post-update data. That way it applies to every way of editing: sheet buttons, form fields, rolls and macros.
+
+```js
+if ( (changes.system?.a !== undefined) || (changes.system?.b !== undefined) ) {
+  const after = foundry.utils.mergeObject(this._source.system, changes.system, { inplace: false });
+  if ( after.a + after.b > 20 ) changes.system.a = 20 - Math.min(20, after.b);   // b wins
+}
+```
