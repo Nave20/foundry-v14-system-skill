@@ -308,6 +308,26 @@ Gauges drawn in SVG or CSS (a resource bar, a dial, a liquid level) work well in
 - **Custom rows inside a `.form-group` inherit core flex sizes.** In a `standard-form` sheet, the core gives the children of `.form-group` flex weights (measured: the label `1 1 0%`, another child `2 1 0%`). A row "label + gauge + buttons" then squeezes the gauge to a few pixels. Override with a selector at least as specific as the core one: `.mysys .form-group.my-row > label { flex: 0 0 auto; }` and `.mysys .form-group.my-row > .gauge { flex: 1 1 auto; }`.
 - To preview a widget's look before coding it in the sheet, a standalone HTML page or an inline preview is much cheaper than a test world: the same SVG and CSS run unchanged.
 
+## 11c-bis. Sheets for several Item types, drops, and long forms (verified in 14.369)
+
+- **One item sheet class for several types**: declare one part per type and keep only the right one.
+  ```js
+  static PARTS = { weapon: { template: ".../weapon.hbs" }, power: { template: ".../power.hbs" } };
+  _configureRenderParts(options) {
+    const parts = super._configureRenderParts(options);
+    for ( const k of Object.keys(parts) ) if ( k !== this.document.type ) delete parts[k];
+    return parts;
+  }
+  ```
+  Register the sheet with `types: ["weapon", "power"]`.
+- **Turning a dropped item into something else**: `ActorSheetV2#_onDropItem(event, item)` receives the resolved Item. Override it to add a line to a list field instead of embedding the item (reference compendiums of merits and flaws, for instance), and fall back to `super._onDropItem(event, item)` for the other types. A call such as `sheet._onDropItem(new Event("drop"), item)` is a handy console test, but also try one real drag from a compendium window.
+- **Lists of embedded items by type**: once an actor can own items of several types, filter every list (`actor.items.filter(i => i.type === "weapon")`); code written when there was a single type usually assumes it.
+- **A settings window that keeps growing**: give it a bounded height (`position: { height: Math.min(760, Math.round(window.innerHeight * 0.85)) }`, `window.resizable: true`), make the body part scrollable (`scrollable: [".body"]`), and use a flex column so the footer stays visible:
+  ```css
+  .mysys.my-app .window-content { display: flex; flex-direction: column; overflow: hidden; }
+  .mysys.my-app .body { flex: 1 1 auto; min-height: 0; overflow-y: auto; }
+  ```
+
 ## 11d. Layout and security pitfalls (verified in 14.369)
 
 - **The core hides empty `.hint` elements.** In a CSS grid row, an empty `<span class="hint">` disappears, so the following cells shift one column left. Render a placeholder ("—") instead of an empty hint.

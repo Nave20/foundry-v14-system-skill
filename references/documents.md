@@ -184,3 +184,7 @@ await Item.createDocuments(data.map(d => ({ ...d, folder: folder.id })), { pack:
 ```
 
 Image paths are relative to the `Data` folder (`my-items/images/x.png`), so files copied outside the system folder are served without being part of the system repository.
+
+Delete a world compendium from a script with `await pack.deleteCompendium()`. When one importer fills several compendiums from the same file, pass a filter (`objects.filter(o => o.system.category === "gift")`) rather than writing one file per compendium.
+
+Importing content from notes (Markdown with front matter) is easier to keep right in a small Python parser with `unittest` tests built from real excerpts: titles (`## Level N`, `### Name`), bold labels (`**Cost: 2**`) and tables vary from note to note, and each format the tests cover stays covered when the parser changes. Have the import print what it skipped.

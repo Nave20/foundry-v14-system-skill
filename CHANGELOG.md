@@ -3,6 +3,19 @@
 Versions follow [semantic versioning](https://semver.org/): patch for fixes, minor for new content, major for a new Foundry generation or a restructure.
 Each entry records the Foundry build it was verified against.
 
+## 1.7.0 — 2026-11-09
+
+Verified against **Foundry VTT 14.369**. These lessons came from the seventh session on the same system: players rolling their own combat steps, powers, merits and flaws.
+
+- `references/sheets-appv2.md`, new section 11c-bis:
+  - one item sheet for several types (`_configureRenderParts`);
+  - overriding `_onDropItem(event, item)` to turn a dropped item into a list line;
+  - filtering embedded items by type;
+  - a long settings window with bounded height, a scrollable body and a fixed footer.
+- `references/rolls-chat.md`: letting each player roll their own step of a chat card (pending step in flags, roll on the clicking client, faces validated by the GM).
+- `references/documents.md`: deleting a world compendium, filling several compendiums from one file, parsing notes with a tested Python parser.
+- `SKILL.md`: `launchWorld` needs the setup page's session; a desktop client can cache an old language file (restart before concluding a key is missing).
+
 ## 1.6.0 — 2026-11-08
 
 Verified against **Foundry VTT 14.369**. These lessons came from the sixth session on the same system: weapons, a combat chat card and werewolf forms.
