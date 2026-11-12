@@ -76,6 +76,7 @@ Code written from older tutorials (V10–V12) breaks or warns in V14. Check this
 | `references/active-effects.md` | effects, conditions, status effects, change types and phases |
 | `references/rolls-chat.md` | dice, roll data, chat cards, message modes, initiative and combat |
 | `references/v14-changes.md` | migrating older code, or anything that "worked in V12/V13" |
+| `references/modules-3d-external.md` | a module that needs an external local service, a three.js / WebGL scene in a window, very large geometry, renaming a module |
 | `references/api-lookup.md` | you need an exact signature: how to grep the local source or fetch API pages |
 
 ## Working conventions

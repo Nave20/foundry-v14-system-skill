@@ -3,6 +3,18 @@
 Versions follow [semantic versioning](https://semver.org/): patch for fixes, minor for new content, major for a new Foundry generation or a restructure.
 Each entry records the Foundry build it was verified against.
 
+## 1.8.0 — 2026-11-12
+
+Verified against **Foundry VTT 14.369**. These lessons came from a module built alongside the system: a holographic 3D map of Paris in a window, synced with a local mini-server.
+
+- New `references/modules-3d-external.md`:
+  - a module that depends on an external local service: saying so, locking cleanly, only the active GM polling, CORS;
+  - renaming a module: settings namespace, world module list, relaunch to rescan packages;
+  - a three.js scene in an ApplicationV2 window: loading, render loop, no long work in `_onFirstRender`, no awaiting `requestAnimationFrame`, GPU-animated progress bars, HTML labels;
+  - drawing hundreds of thousands of objects: merged geometry, additive glow without white-out (hidden-line faces + fog), terrain, anti-moiré stripes, separate exaggeration factors;
+  - sharing the data with a Claude artifact through a local MCP server.
+- `SKILL.md`: the new reference is listed.
+
 ## 1.7.0 — 2026-11-09
 
 Verified against **Foundry VTT 14.369**. These lessons came from the seventh session on the same system: players rolling their own combat steps, powers, merits and flaws.
