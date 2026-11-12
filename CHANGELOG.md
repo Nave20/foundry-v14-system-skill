@@ -3,6 +3,13 @@
 Versions follow [semantic versioning](https://semver.org/): patch for fixes, minor for new content, major for a new Foundry generation or a restructure.
 Each entry records the Foundry build it was verified against.
 
+## 1.9.0 — 2026-11-12
+
+Verified against **Foundry VTT 14.369**. These lessons came from importing about two hundred non-player characters from Obsidian notes.
+
+- `references/documents.md`, new section « Creating many actors from notes »: mapping by schema, checking values before `Actor.create`, isolating failures, a report grouped by kind, folders, re-import by flag, portraits and tokens, compendium lookups cached per batch.
+- `SKILL.md`: joining a world whose GM user has a password (ask for a dedicated GM user).
+
 ## 1.8.0 — 2026-11-12
 
 Verified against **Foundry VTT 14.369**. These lessons came from a module built alongside the system: a holographic 3D map of Paris in a window, synced with a local mini-server.

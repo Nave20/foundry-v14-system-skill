@@ -188,3 +188,16 @@ Image paths are relative to the `Data` folder (`my-items/images/x.png`), so file
 Delete a world compendium from a script with `await pack.deleteCompendium()`. When one importer fills several compendiums from the same file, pass a filter (`objects.filter(o => o.system.category === "gift")`) rather than writing one file per compendium.
 
 Importing content from notes (Markdown with front matter) is easier to keep right in a small Python parser with `unittest` tests built from real excerpts: titles (`## Level N`, `### Name`), bold labels (`**Cost: 2**`) and tables vary from note to note, and each format the tests cover stays covered when the parser changes. Have the import print what it skipped.
+
+### Creating many actors from notes (verified in 14.369)
+
+Turning a few hundred character notes into actors works best in two steps: a tested parser that only reads the notes (properties, sections, lists), and a console script in Foundry that maps them onto the data model, so it can use the world's settings (renamed or added traits) and the compendium indexes.
+
+- **Map by schema, not by hand**: walk `CONFIG.Actor.dataModels[type].schema.fields` and copy a note property with the same key when the field is a `StringField` or `NumberField`. Coerce numbers (`Number(v)`, round, clamp) and check `choices` first: one invalid value makes `Actor.create` throw and the whole document is lost.
+- **One failure must not stop the batch**: wrap each creation in `try/catch` and collect the error in the report.
+- **Report by kind, not by document**: replace names and numbers with placeholders (`«…»`, `N`) and count each pattern. Two hundred lines become a dozen the user can act on.
+- **Folders**: recreate the source folders under one root with `Folder.create({ name, type: "Actor", folder: parentId })`, caching each created folder.
+- **Re-import without duplicates**: store the source path in a flag (`flags.<system>.import.chemin`) and delete the actor with the same flag before creating the new one.
+- **Images**: copy portraits and tokens next to the data (`Data/<folder>/x.jpg`) and pass `img` and `prototypeToken: { texture: { src } }` with the path relative to `Data`.
+- **Compendium lookups**: fetch each pack index once per batch (`pack.getIndex({ fields: [...] })`), compare names without accents, case or plural endings, and take a compendium entry only once per actor.
+- Test on a renamed copy of one note (and delete it) rather than re-importing the batch the user may be checking.
